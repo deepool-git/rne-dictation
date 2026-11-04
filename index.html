@@ -97,6 +97,8 @@ textarea{width:100%;font:13px/1.4 ui-monospace,monospace;padding:10px;border:1px
     <label class="row"><input type="radio" name="replay" value="아니오"><span>아니오, 처음부터 끝까지 집중해서 했어요</span></label>
     <label class="row"><input type="radio" name="replay" value="예"><span>예, 있어요</span></label>
   </div>
+  <label for="comment" style="display:block;margin-top:14px">설문을 하며 느낀 점 <span class="sub">(선택)</span></label>
+  <textarea id="comment" maxlength="500" placeholder="불편했던 점이나 느낀 점을 자유롭게 적어 주세요" style="font:inherit;font-size:16px;height:90px;margin-top:6px"></textarea>
   <button id="b-submit" disabled>제출</button>
   <div id="submitmsg" class="msg hidden"></div>
 </section>
@@ -269,13 +271,14 @@ $('b-resume').onclick = () => { $('runmsg').classList.add('hidden'); $('b-resume
 document.addEventListener('visibilitychange', () => { if (document.hidden && st.stage === 'run') { st.hidden++; save(); } });
 
 // 끝
+$('comment').addEventListener('input', () => { st.comment = $('comment').value; save(); });
 document.querySelectorAll('input[name=replay]').forEach(r => r.addEventListener('change', () => { st.replay = r.value; save(); $('b-submit').disabled = false; }));
 
 function payload(){
   return { sid: st.sid, file: st.pid, assign: st.assign, earphones: st.earphones,
     replay: st.replay + (st.reloadedMidway ? ' (중간에 페이지를 다시 엶)' : ''),
     answers: st.answers, timing: st.events,
-    meta: { 응답시간: st.rt, 진행: '제출하면 다음 문항', 조용한곳: st.quiet, 처음들음: st.first, 중단횟수: st.interruptions, 화면벗어남: st.hidden, 끝까지: st.finished,
+    meta: { 의견: st.comment || '', 응답시간: st.rt, 진행: '제출하면 다음 문항', 조용한곳: st.quiet, 처음들음: st.first, 중단횟수: st.interruptions, 화면벗어남: st.hidden, 끝까지: st.finished,
             시작: st.startedAt, 제출: new Date().toISOString(), 음성: AUDIO_VERSION, 기기: navigator.userAgent.slice(0, 160) } };
 }
 function csv(p){
@@ -343,7 +346,7 @@ else if (st.stage === 'run') {
   $('runmsg').classList.remove('hidden'); $('b-resume').classList.remove('hidden');
 }
 else if (st.stage === 'end') {
-  show('s-end');
+  show('s-end'); if (st.comment) $('comment').value = st.comment;
   if (st.replay) { const r = document.querySelector('input[name=replay][value="' + st.replay + '"]'); if (r) { r.checked = true; $('b-submit').disabled = false; } }
 }
 else if (st.stage === 'check') show('s-check');
