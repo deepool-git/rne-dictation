@@ -14,4 +14,6 @@ const FORM = {
 };
 // 2) 구글 Apps Script 서버(서버/Code.gs): 파일 번호를 고르게 나눠 준다. 주소를 넣으면 폼 대신 이쪽을 쓴다
 const ENDPOINT = '';
+// 상품권 추첨 응모용 구글 폼(전화번호만 받는 따로 만든 폼). 비우면 완료 화면에 응모 칸이 나오지 않는다
+const PRIZE_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLScKy_aysCSsB3zdv3AFR2SX4jjdyZgiaY2XCnMkwlgGhU5VZg/viewform';
 const AUDIO_VERSION = 'standard 2026-10-21';

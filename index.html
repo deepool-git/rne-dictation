@@ -54,8 +54,11 @@ textarea{width:100%;font:13px/1.4 ui-monospace,monospace;padding:10px;border:1px
     <li>음성은 <b>한 번만</b> 들을 수 있어요. 중간에 멈추거나 되돌리지 마세요.</li>
     <li>삐 소리 다음에 단어가 한 번 나와요. 들린 단어를 칸에 적어 주세요.</li>
     <li>다음 삐 소리가 나면 칸이 저절로 다음 문항으로 넘어가요. 지난 문항은 고칠 수 없어요.</li>
-    <li>모르겠으면 비워 두거나 들린 소리 그대로 적어 주세요. 맞춤법은 신경 쓰지 않아도 돼요.</li>
+    <li><b>뜻이 맞는 단어를 짐작하지 말고, 귀에 들린 소리 그대로 적어 주세요.</b> 맞춤법은 신경 쓰지 않아도 돼요.</li>
+    <li>같은 단어가 여러 번 나올 수 있어요. 앞에서 들은 단어라도 매번 새로 들리는 대로 적어 주세요.</li>
+    <li>전혀 안 들렸으면 비워 두세요.</li>
   </ol>
+  <p class="sub">끝나고 전화번호를 남기면 추첨으로 <b>10명에게 메가커피 상품권</b>을 드려요.</p>
   <p class="sub">연습 2문항 뒤에 본 문항 36개가 이어져요. 이름은 받지 않아요.</p>
   <div class="card" style="margin:14px 0 0;padding:6px 14px">
     <label class="row"><input type="checkbox" id="c-ear"><span>이어폰(또는 헤드폰)을 끼고 있어요</span></label>
@@ -101,6 +104,13 @@ textarea{width:100%;font:13px/1.4 ui-monospace,monospace;padding:10px;border:1px
   <h1>고마워요!</h1>
   <p id="donenote">응답이 진행자에게 전달됐어요. 창을 닫아도 돼요.</p>
   <p class="sub">어떤 단어였는지는 다른 참가자를 위해 실험이 끝난 뒤에 알려 줄게요.</p>
+  <div class="card" id="prize" style="margin:14px 0 0">
+    <h2>메가커피 상품권 추첨</h2>
+    <p>상품권을 원하면 전화번호를 남겨 주세요. 추첨으로 <b>10명</b>에게 드려요.</p>
+    <p class="sub">(전화번호는 설문 답과 따로 저장되고, 발송이 끝나면 바로 지워요)</p>
+    <a class="btn" id="b-prize" href="" target="_blank" rel="noopener" style="display:block;text-align:center;text-decoration:none">전화번호 남기기</a>
+    <button class="ghost" id="b-noprize" type="button">안 받을게요</button>
+  </div>
   <p class="sub" id="filetag"></p>
 </section>
 
@@ -262,6 +272,10 @@ function fallback(note){
 }
 function finishScreen(){
   show('s-done');
+  if (typeof PRIZE_FORM === 'string' && PRIZE_FORM && !st.prizeDone) { $('b-prize').href = PRIZE_FORM; $('prize').hidden = false; }
+  else $('prize').hidden = true;
+  $('b-prize').onclick = () => { st.prizeDone = true; save(); setTimeout(() => { $('prize').hidden = true; }, 500); };
+  $('b-noprize').onclick = () => { st.prizeDone = true; save(); $('prize').hidden = true; };
   $('filetag').textContent = '파일 ' + st.pid;
   if (!st.sent) { $('donenote').textContent = '응답이 아직 전달되지 않았어요. 아래 글을 복사해서 진행자에게 카톡으로 보내 주세요.'; fallback(); }
 }
