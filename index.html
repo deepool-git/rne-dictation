@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>단어 받아쓰기 설문</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--ink:#1d2129;--sub:#5b6270;--line:#dde0e6;--accent:#2457c5;--accent-ink:#fff;--warn:#b4421b;--ok:#1d7a46;--soft:#eef2fb}
+@media (prefers-color-scheme:dark){:root{--bg:#15171b;--card:#1f2228;--ink:#e9ebef;--sub:#a3a9b5;--line:#343843;--accent:#6f98ef;--accent-ink:#0d1220;--warn:#f08b62;--ok:#5fc48c;--soft:#252c3b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;-webkit-text-size-adjust:100%}
+main{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}
+h1{font-size:22px;margin:0 0 6px}
+h2{font-size:18px;margin:0 0 10px}
+p{margin:0 0 10px}
+.sub{color:var(--sub);font-size:15px}
+ol{margin:0 0 10px;padding-left:22px}
+li{margin-bottom:4px}
+label.row{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid var(--line)}
+label.row:first-of-type{border-top:0}
+input[type=checkbox],input[type=radio]{width:20px;height:20px;margin-top:3px;flex:none}
+button{font:inherit;font-weight:600;border:0;border-radius:12px;padding:14px 18px;width:100%;background:var(--accent);color:var(--accent-ink);cursor:pointer;margin-top:8px}
+button.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
+button:disabled{opacity:.4;cursor:default}
+.hidden{display:none!important}
+.tag{display:inline-block;font-size:13px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:2px 10px;margin-bottom:10px}
+#qlabel{font-size:30px;font-weight:700;text-align:center;margin:6px 0 2px}
+#qhint{text-align:center;color:var(--sub);font-size:15px;min-height:24px}
+#answer{width:100%;font:inherit;font-size:28px;text-align:center;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);margin-top:12px}
+#answer:focus{outline:none;border-color:var(--accent)}
+#answer:disabled{opacity:.5}
+.bar{height:8px;background:var(--soft);border-radius:999px;overflow:hidden;margin-top:16px}
+.bar>div{height:100%;width:0;background:var(--accent);transition:width .2s}
+.msg{padding:12px 14px;border-radius:10px;background:var(--soft);font-size:15px;margin-top:12px}
+.msg.warn{color:var(--warn)}
+.msg.ok{color:var(--ok)}
+textarea{width:100%;font:13px/1.4 ui-monospace,monospace;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);height:110px}
+</style>
+</head>
+<body>
+<main>
+
+<section id="s-nofile" class="card hidden">
+  <h1>링크를 다시 확인해 주세요</h1>
+  <p>주소 끝의 파일 번호가 잘못됐어요. 받은 링크를 그대로 열어 주세요.</p>
+</section>
+
+<section id="s-intro" class="card hidden">
+  <h1>단어 받아쓰기 설문</h1>
+  <p>빠르게 재생한 단어를 듣고 들린 대로 적는 설문이에요. 약 4분 걸려요.</p>
+  <ol>
+    <li>이어폰을 끼고 조용한 곳에서 해 주세요.</li>
+    <li>음성은 <b>한 번만</b> 들을 수 있어요. 중간에 멈추거나 되돌리지 마세요.</li>
+    <li>삐 소리 다음에 단어가 한 번 나와요. 들린 단어를 칸에 적어 주세요.</li>
+    <li>다음 삐 소리가 나면 칸이 저절로 다음 문항으로 넘어가요. 지난 문항은 고칠 수 없어요.</li>
+    <li>모르겠으면 비워 두거나 들린 소리 그대로 적어 주세요. 맞춤법은 신경 쓰지 않아도 돼요.</li>
+  </ol>
+  <p class="sub">연습 2문항 뒤에 본 문항 36개가 이어져요. 이름은 받지 않아요.</p>
+  <div class="card" style="margin:14px 0 0;padding:6px 14px">
+    <label class="row"><input type="checkbox" id="c-ear"><span>이어폰(또는 헤드폰)을 끼고 있어요</span></label>
+    <label class="row"><input type="checkbox" id="c-quiet"><span>조용한 곳이고, 4분 동안 다른 일을 하지 않을 수 있어요</span></label>
+    <label class="row"><input type="checkbox" id="c-first"><span>이 설문의 음성을 전에 들은 적이 없어요</span></label>
+  </div>
+  <p class="sub" style="margin-top:10px">이어폰이 없으면 첫 칸을 비우고 진행해도 돼요(기록에 남아요).</p>
+  <button id="b-next" disabled>다음</button>
+  <div id="nextmsg" class="msg hidden"></div>
+</section>
+
+<section id="s-check" class="card hidden">
+  <h2>소리 크기 맞추기</h2>
+  <p>아래 버튼을 눌러 삐 소리를 들어 보고, 편하게 들리도록 음량을 맞춰 주세요. 몇 번 눌러도 돼요.</p>
+  <button class="ghost" id="b-beep">삐 소리 들어 보기</button>
+  <p class="sub" style="margin-top:14px">준비되면 시작을 눌러 주세요. 누르면 바로 음성이 나오고 멈출 수 없어요.</p>
+  <button id="b-start">시작</button>
+  <div id="startmsg" class="msg warn hidden"></div>
+</section>
+
+<section id="s-run" class="card hidden">
+  <div id="qlabel">곧 시작해요</div>
+  <div id="qhint">삐 소리 세 번 뒤에 연습 문항이 나와요</div>
+  <input id="answer" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" disabled>
+  <div class="bar"><div id="bar"></div></div>
+  <div id="runmsg" class="msg warn hidden"></div>
+  <button id="b-resume" class="hidden">이어서 듣기</button>
+</section>
+
+<section id="s-end" class="card hidden">
+  <h2>거의 끝났어요</h2>
+  <p id="endnote">음성이 끝났어요. 하나만 더 알려 주세요.</p>
+  <div class="card" style="margin:10px 0 0;padding:6px 14px">
+    <p style="margin:10px 0 4px">중간에 멈추거나, 다시 듣거나, 다른 일을 한 적이 있나요?</p>
+    <label class="row"><input type="radio" name="replay" value="아니오"><span>아니오, 처음부터 끝까지 한 번에 들었어요</span></label>
+    <label class="row"><input type="radio" name="replay" value="예"><span>예, 있어요</span></label>
+  </div>
+  <button id="b-submit" disabled>제출</button>
+  <div id="submitmsg" class="msg hidden"></div>
+</section>
+
+<section id="s-done" class="card hidden">
+  <h1>고마워요!</h1>
+  <p id="donenote">응답이 진행자에게 전달됐어요. 창을 닫아도 돼요.</p>
+  <p class="sub">어떤 단어였는지는 다른 참가자를 위해 실험이 끝난 뒤에 알려 줄게요.</p>
+  <p class="sub" id="filetag"></p>
+</section>
+
+<section id="s-fallback" class="card hidden">
+  <h2>응답 코드</h2>
+  <p id="fbnote">아래 글을 모두 복사해서 진행자에게 카톡으로 보내 주세요.</p>
+  <textarea id="code" readonly></textarea>
+  <button id="b-copy">복사하기</button>
+  <button class="ghost" id="b-csv">CSV 파일로 받기</button>
+</section>
+
+</main>
+
+<script src="config.js"></script>
+<script src="timeline.js"></script>
+<script>
+(function(){
+const $ = id => document.getElementById(id);
+const show = (...ids) => { document.querySelectorAll('main>section').forEach(s => s.classList.add('hidden')); ids.forEach(id => $(id).classList.remove('hidden')); };
+const LABELS = ['연습 1','연습 2'].concat(Array.from({length:36}, (_, i) => String(i + 1)));
+const GRACE = 0.4;  // 다음 삐 소리 뒤 0.4초까지는 앞 문항 답으로 받는다(단어는 삐 0.65초 뒤에 나온다)
+const MAIN_FILES = ['P01','P02','P03','P04','P05','P06','P07','P08'];
+const KEY = 'rne-dictation-v2';
+
+// 주소에 ?p=P09 처럼 번호가 있으면 그 파일(진행 시험용), 없으면 서버가 나눠 준다
+const urlP = (new URLSearchParams(location.search).get('p') || '').toUpperCase();
+if (urlP && !TIMELINE[urlP]) { show('s-nofile'); return; }
+
+const fresh = () => ({ pid:'', assign:'', sid: Math.random().toString(36).slice(2) + Date.now().toString(36),
+  stage:'intro', earphones:'', quiet:'', first:'', answers:LABELS.map(() => ''), events:LABELS.map(() => []),
+  interruptions:0, hidden:0, finished:false, startedAt:'', replay:'', reloadedMidway:false, submitted:false, sent:false });
+let st = fresh();
+try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) st = Object.assign(st, s); } catch(e){}
+if (urlP && st.pid && st.pid !== urlP) st = fresh();          // 다른 번호로 시험할 때는 새로 시작
+if (new URLSearchParams(location.search).has('new')) st = fresh();   // 한 기기로 여러 사람을 받을 때: 주소 끝에 ?new 를 붙여 연다
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){} };
+
+async function getJSON(url, opt){
+  const c = new AbortController(); const t = setTimeout(() => c.abort(), 10000);
+  try { const r = await fetch(url, Object.assign({ signal:c.signal, redirect:'follow' }, opt || {})); return await r.json(); }
+  finally { clearTimeout(t); }
+}
+async function assignFile(){
+  if (urlP) { st.pid = urlP; st.assign = '주소 지정'; return; }
+  if (st.pid) return;
+  if (ENDPOINT) {
+    try { const r = await getJSON(ENDPOINT + '?action=assign&sid=' + encodeURIComponent(st.sid)); if (r.ok && TIMELINE[r.file]) { st.pid = r.file; st.assign = '서버 배정'; return; } } catch(e){}
+  }
+  st.pid = MAIN_FILES[Math.floor(Math.random() * MAIN_FILES.length)]; st.assign = ENDPOINT ? '무작위(서버 연결 안 됨)' : '무작위';
+}
+
+// 처음 화면
+const updateNext = () => { $('b-next').disabled = !($('c-quiet').checked && $('c-first').checked); };
+['c-ear','c-quiet','c-first'].forEach(b => $(b).addEventListener('change', updateNext));
+$('b-next').onclick = async () => {
+  $('b-next').disabled = true; $('nextmsg').textContent = '음성을 준비하고 있어요...'; $('nextmsg').classList.remove('hidden');
+  st.earphones = $('c-ear').checked ? '예' : '아니오';
+  st.quiet = $('c-quiet').checked ? '예' : '아니오';
+  st.first = $('c-first').checked ? '예' : '아니오';
+  await assignFile();
+  setupAudio();
+  st.stage = 'check'; save(); show('s-check');
+};
+
+// 소리 확인
+let actx;
+$('b-beep').onclick = () => {
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = actx.createOscillator(), g = actx.createGain(), t = actx.currentTime;
+    o.frequency.value = 1000; g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.25, t + 0.005); g.gain.setValueAtTime(0.25, t + 0.145); g.gain.linearRampToValueAtTime(0, t + 0.15);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + 0.16);
+  } catch(e) {}
+};
+
+// 재생
+let audio = null, T = null, cur = -1, composing = false, ticking = null;
+const input = $('answer');
+function setupAudio(){
+  if (audio) return;
+  T = TIMELINE[st.pid];
+  audio = new Audio('audio/' + st.pid + '.mp3');
+  audio.preload = 'auto';
+  audio.addEventListener('error', () => { $('startmsg').textContent = '음성을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.'; $('startmsg').classList.remove('hidden'); });
+  audio.addEventListener('pause', () => {
+    if (audio.ended || !st.startedAt) return;
+    st.interruptions++; save();
+    $('runmsg').textContent = '음성이 멈췄어요. 바로 이어서 들어 주세요. 멈춘 것은 기록에 남아요.';
+    $('runmsg').classList.remove('hidden'); $('b-resume').classList.remove('hidden');
+  });
+  audio.addEventListener('ended', () => {
+    clearInterval(ticking);
+    if (cur >= 0) st.answers[cur] = input.value;
+    st.finished = true; st.stage = 'end';
+    if (st.interruptions > 0) { st.replay = '예'; document.querySelector('input[name=replay][value="예"]').checked = true; $('b-submit').disabled = false; }
+    save(); show('s-end');
+  });
+}
+function indexAt(t){
+  let k = -1;
+  for (let i = 0; i < T.items.length; i++) if (t >= T.items[i] - 0.05 + (i === 0 ? 0 : GRACE)) k = i;
+  return k;
+}
+function setItem(k){
+  if (k === cur) return;
+  if (cur >= 0) st.answers[cur] = input.value;
+  if (composing) { input.blur(); input.focus(); composing = false; }
+  cur = k;
+  input.value = '';
+  input.disabled = k < 0;
+  if (k >= 0) {
+    $('qlabel').textContent = k < 2 ? LABELS[k] : LABELS[k] + ' / 36';
+    $('qhint').textContent = k < 2 ? '연습이에요. 들린 단어를 적어 보세요' : (k === 2 ? '이제 본 문항이에요' : '들린 단어를 적어 주세요');
+    $('bar').style.width = Math.round((k + 1) / LABELS.length * 100) + '%';
+    input.focus();
+  }
+  save();
+}
+input.addEventListener('compositionstart', () => composing = true);
+input.addEventListener('compositionend', () => composing = false);
+input.addEventListener('input', () => { if (cur >= 0) { st.answers[cur] = input.value; st.events[cur].push(+audio.currentTime.toFixed(2)); save(); } });
+input.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
+
+$('b-start').onclick = async () => {
+  if (st.startedAt) return;
+  try { await audio.play(); }
+  catch(e) { $('startmsg').textContent = '재생하지 못했어요. 소리 설정을 확인하고 다시 눌러 주세요.'; $('startmsg').classList.remove('hidden'); return; }
+  st.startedAt = new Date().toISOString(); st.stage = 'run'; save();
+  show('s-run'); input.disabled = true;
+  ticking = setInterval(() => { if (!audio.paused) setItem(indexAt(audio.currentTime)); }, 50);
+};
+$('b-resume').onclick = async () => { try { await audio.play(); $('runmsg').classList.add('hidden'); $('b-resume').classList.add('hidden'); input.focus(); } catch(e){} };
+document.addEventListener('visibilitychange', () => { if (document.hidden && st.stage === 'run') { st.hidden++; save(); } });
+
+// 끝
+document.querySelectorAll('input[name=replay]').forEach(r => r.addEventListener('change', () => { st.replay = r.value; save(); $('b-submit').disabled = false; }));
+
+function payload(){
+  return { sid: st.sid, file: st.pid, assign: st.assign, earphones: st.earphones,
+    replay: st.replay + (st.reloadedMidway ? ' (중간에 페이지를 다시 엶)' : ''),
+    answers: st.answers, timing: st.events,
+    meta: { 조용한곳: st.quiet, 처음들음: st.first, 중단횟수: st.interruptions, 화면벗어남: st.hidden, 끝까지: st.finished,
+            시작: st.startedAt, 제출: new Date().toISOString(), 음성: AUDIO_VERSION, 기기: navigator.userAgent.slice(0, 160) } };
+}
+function csv(p){
+  const q = x => '"' + String(x).replaceAll('"', '""') + '"';
+  const rows = [['파일번호','번호','응답','입력시각_음성초','이어폰','멈춤또는다시듣기','기타']];
+  LABELS.forEach((l, i) => rows.push([p.file, l, p.answers[i], JSON.stringify(p.timing[i]), p.earphones, p.replay, i === 0 ? JSON.stringify(p.meta) : '']));
+  return '﻿' + rows.map(r => r.map(q).join(',')).join('\r\n');
+}
+function fallback(note){
+  const p = payload();
+  $('code').value = '[받아쓰기 응답] ' + JSON.stringify(p);
+  if (note) $('fbnote').textContent = note;
+  $('s-fallback').classList.remove('hidden');
+  $('b-copy').onclick = async () => { try { await navigator.clipboard.writeText($('code').value); } catch(e) { $('code').select(); document.execCommand('copy'); } $('b-copy').textContent = '복사했어요'; };
+  $('b-csv').onclick = () => { const u = URL.createObjectURL(new Blob([csv(p)], {type:'text/csv;charset=utf-8'})); const a = document.createElement('a'); a.href = u; a.download = p.file + '_받아쓰기_응답.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(u), 1000); };
+}
+function finishScreen(){
+  show('s-done');
+  $('filetag').textContent = '파일 ' + st.pid;
+  if (!st.sent) { $('donenote').textContent = '응답이 아직 전달되지 않았어요. 아래 글을 복사해서 진행자에게 카톡으로 보내 주세요.'; fallback(); }
+}
+
+// 구글 폼으로 보내기: 숨긴 iframe에 폼을 제출한다. 구글은 결과를 돌려주지 않아서, iframe이 응답을 받으면 보낸 것으로 본다
+function sendToForm(p){
+  return new Promise(resolve => {
+    const vals = { file:p.file, assign:p.assign, earphones:p.earphones, replay:p.replay,
+                   answers:JSON.stringify(p.answers), timing:JSON.stringify(p.timing), meta:JSON.stringify(Object.assign({ sid:p.sid }, p.meta)) };
+    const frame = document.createElement('iframe'); frame.name = 'sink'; frame.hidden = true; document.body.appendChild(frame);
+    const f = document.createElement('form'); f.method = 'POST'; f.action = FORM.action; f.target = 'sink'; f.hidden = true;
+    Object.entries(FORM.fields).forEach(([k, name]) => { const i = document.createElement('input'); i.type = 'hidden'; i.name = name; i.value = vals[k]; f.appendChild(i); });
+    document.body.appendChild(f);
+    let done = false; const end = ok => { if (!done) { done = true; resolve(ok); } };
+    frame.addEventListener('load', () => end(true));
+    setTimeout(() => end(false), 15000);
+    f.submit();
+  });
+}
+
+$('b-submit').onclick = async () => {
+  $('b-submit').disabled = true;
+  $('submitmsg').textContent = '보내는 중이에요...'; $('submitmsg').className = 'msg';
+  if (ENDPOINT) {
+    try {
+      const r = await getJSON(ENDPOINT, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify(payload()) });
+      if (r.ok) st.sent = true;
+    } catch(e) {}
+  } else if (FORM.action) {
+    st.sent = await sendToForm(payload());
+  }
+  st.submitted = true; save(); finishScreen();
+};
+
+// 다시 열었을 때
+if (st.pid) setupAudio();
+if (st.submitted) finishScreen();
+else if (st.stage === 'run' || st.stage === 'end') {
+  if (st.stage === 'run') { st.reloadedMidway = true; st.stage = 'end'; save(); }
+  show('s-end');
+  $('endnote').textContent = st.finished ? '음성이 끝났어요. 하나만 더 알려 주세요.' : '페이지가 중간에 다시 열렸어요. 음성은 다시 들을 수 없어요. 지금까지 적은 답을 제출해 주세요.';
+  if (st.replay) { const r = document.querySelector('input[name=replay][value="' + st.replay + '"]'); if (r) { r.checked = true; $('b-submit').disabled = false; } }
+}
+else if (st.stage === 'check') show('s-check');
+else show('s-intro');
+})();
+</script>
+</body>
+</html>
