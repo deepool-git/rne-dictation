@@ -48,13 +48,12 @@ textarea{width:100%;font:13px/1.4 ui-monospace,monospace;padding:10px;border:1px
 
 <section id="s-intro" class="card hidden">
   <h1>단어 받아쓰기 설문</h1>
-  <p>빠르게 재생한 단어를 듣고 들린 대로 적는 설문이에요. 약 4분 걸려요.</p>
+  <p>빠르게 재생한 단어를 듣고 들린 대로 적는 설문이에요. 3~4분 걸려요.</p>
   <ol>
     <li>이어폰을 끼고 조용한 곳에서 해 주세요.</li>
-    <li>음성은 <b>한 번만</b> 들을 수 있어요. 중간에 멈추거나 되돌리지 마세요.</li>
-    <li>삐 소리 다음에 단어가 한 번 나와요. 들린 단어를 칸에 적어 주세요.</li>
-    <li>다음 삐 소리가 나면 칸이 저절로 다음 문항으로 넘어가요. 지난 문항은 고칠 수 없어요.</li>
-    <li><b>뜻이 맞는 단어를 짐작하지 말고, 귀에 들린 소리 그대로 적어 주세요.</b> 맞춤법은 신경 쓰지 않아도 돼요.</li>
+    <li>삐 소리 다음에 단어가 <b>한 번만</b> 나와요. 다시 들을 수 없어요.</li>
+    <li>들린 대로 적고 <b>제출</b>을 누르면 다음 단어가 나와요. 지난 문항은 고칠 수 없어요.</li>
+    <li><b>맞춤법 말고, 귀에 들린 소리 그대로 적어 주세요.</b> 소리 나는 대로 적어도 정답이에요. 뜻이 맞는 단어를 짐작하지 않아도 돼요.</li>
     <li>같은 단어가 여러 번 나올 수 있어요. 앞에서 들은 단어라도 매번 새로 들리는 대로 적어 주세요.</li>
     <li>전혀 안 들렸으면 비워 두세요.</li>
   </ol>
@@ -62,7 +61,7 @@ textarea{width:100%;font:13px/1.4 ui-monospace,monospace;padding:10px;border:1px
   <p class="sub">연습 2문항 뒤에 본 문항 36개가 이어져요. 이름은 받지 않아요.</p>
   <div class="card" style="margin:14px 0 0;padding:6px 14px">
     <label class="row"><input type="checkbox" id="c-ear"><span>이어폰(또는 헤드폰)을 끼고 있어요</span></label>
-    <label class="row"><input type="checkbox" id="c-quiet"><span>조용한 곳이고, 4분 동안 다른 일을 하지 않을 수 있어요</span></label>
+    <label class="row"><input type="checkbox" id="c-quiet"><span>조용한 곳이고, 끝날 때까지 다른 일을 하지 않을 수 있어요</span></label>
     <label class="row"><input type="checkbox" id="c-first"><span>이 설문의 음성을 전에 들은 적이 없어요</span></label>
   </div>
   <p class="sub" style="margin-top:10px">이어폰이 없으면 첫 칸을 비우고 진행해도 돼요(기록에 남아요).</p>
@@ -74,26 +73,28 @@ textarea{width:100%;font:13px/1.4 ui-monospace,monospace;padding:10px;border:1px
   <h2>소리 크기 맞추기</h2>
   <p>아래 버튼을 눌러 삐 소리를 들어 보고, 편하게 들리도록 음량을 맞춰 주세요. 몇 번 눌러도 돼요.</p>
   <button class="ghost" id="b-beep">삐 소리 들어 보기</button>
-  <p class="sub" style="margin-top:14px">준비되면 시작을 눌러 주세요. 누르면 바로 음성이 나오고 멈출 수 없어요.</p>
+  <p class="sub" style="margin-top:14px">준비되면 시작을 눌러 주세요. 누르면 바로 연습 1번 단어가 나와요.</p>
   <button id="b-start">시작</button>
   <div id="startmsg" class="msg warn hidden"></div>
 </section>
 
 <section id="s-run" class="card hidden">
-  <div id="qlabel">곧 시작해요</div>
-  <div id="qhint">삐 소리 세 번 뒤에 연습 문항이 나와요</div>
-  <input id="answer" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" disabled>
+  <div id="qlabel">연습 1</div>
+  <div id="qhint">듣는 중이에요</div>
+  <input id="answer" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="send" disabled>
+  <p class="sub" style="text-align:center;margin:8px 0 0">맞춤법 말고 들린 소리 그대로</p>
+  <button id="b-ans" disabled>제출</button>
   <div class="bar"><div id="bar"></div></div>
   <div id="runmsg" class="msg warn hidden"></div>
-  <button id="b-resume" class="hidden">이어서 듣기</button>
+  <button id="b-resume" class="hidden">이어서 하기</button>
 </section>
 
 <section id="s-end" class="card hidden">
   <h2>거의 끝났어요</h2>
-  <p id="endnote">음성이 끝났어요. 하나만 더 알려 주세요.</p>
+  <p id="endnote">모든 문항이 끝났어요. 하나만 더 알려 주세요.</p>
   <div class="card" style="margin:10px 0 0;padding:6px 14px">
-    <p style="margin:10px 0 4px">중간에 멈추거나, 다시 듣거나, 다른 일을 한 적이 있나요?</p>
-    <label class="row"><input type="radio" name="replay" value="아니오"><span>아니오, 처음부터 끝까지 한 번에 들었어요</span></label>
+    <p style="margin:10px 0 4px">중간에 다른 일을 하거나, 소리를 놓치거나, 페이지를 다시 연 적이 있나요?</p>
+    <label class="row"><input type="radio" name="replay" value="아니오"><span>아니오, 처음부터 끝까지 집중해서 했어요</span></label>
     <label class="row"><input type="radio" name="replay" value="예"><span>예, 있어요</span></label>
   </div>
   <button id="b-submit" disabled>제출</button>
@@ -131,7 +132,6 @@ textarea{width:100%;font:13px/1.4 ui-monospace,monospace;padding:10px;border:1px
 const $ = id => document.getElementById(id);
 const show = (...ids) => { document.querySelectorAll('main>section').forEach(s => s.classList.add('hidden')); ids.forEach(id => $(id).classList.remove('hidden')); };
 const LABELS = ['연습 1','연습 2'].concat(Array.from({length:36}, (_, i) => String(i + 1)));
-const GRACE = 0.4;  // 다음 삐 소리 뒤 0.4초까지는 앞 문항 답으로 받는다(단어는 삐 0.65초 뒤에 나온다)
 const MAIN_FILES = ['P01','P02','P03','P04','P05','P06','P07','P08'];
 const KEY = 'rne-dictation-v2';
 
@@ -141,7 +141,7 @@ if (urlP && !TIMELINE[urlP]) { show('s-nofile'); return; }
 
 const fresh = () => ({ pid:'', assign:'', sid: Math.random().toString(36).slice(2) + Date.now().toString(36),
   stage:'intro', earphones:'', quiet:'', first:'', answers:LABELS.map(() => ''), events:LABELS.map(() => []),
-  interruptions:0, hidden:0, finished:false, startedAt:'', replay:'', reloadedMidway:false, submitted:false, sent:false });
+  cur:0, played:LABELS.map(() => false), rt:LABELS.map(() => null), interruptions:0, hidden:0, finished:false, startedAt:'', replay:'', reloadedMidway:false, submitted:false, sent:false });
 let st = fresh();
 try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) st = Object.assign(st, s); } catch(e){}
 if (urlP && st.pid && st.pid !== urlP) st = fresh();          // 다른 번호로 시험할 때는 새로 시작
@@ -187,63 +187,85 @@ $('b-beep').onclick = () => {
   } catch(e) {}
 };
 
-// 재생
-let audio = null, T = null, cur = -1, composing = false, ticking = null;
+// 재생: 문항마다 그 구간(삐 소리부터 단어 끝까지)만 한 번 틀고, 제출하면 다음 문항을 튼다
+let audio = null, T = null, stopper = null, playing = false, wordEndAt = 0;
 const input = $('answer');
 function setupAudio(){
   if (audio) return;
   T = TIMELINE[st.pid];
-  audio = new Audio('audio/' + st.pid + '.mp3');
+  audio = new Audio();
   audio.preload = 'auto';
-  audio.addEventListener('error', () => { $('startmsg').textContent = '음성을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.'; $('startmsg').classList.remove('hidden'); });
+  const fail = () => { $('startmsg').textContent = '음성을 불러오지 못했어요. 인터넷 연결을 확인하고 새로고침해 주세요.'; $('startmsg').className = 'msg warn'; };
+  audio.addEventListener('error', fail);
+  // 파일을 통째로 받아 두고 튼다. 그래야 통신이 느리거나 서버가 구간 요청을 못 받아도 문항 위치로 정확히 건너뛸 수 있다
+  $('b-start').disabled = true; $('b-resume').disabled = true;
+  $('startmsg').textContent = '음성을 받는 중이에요(약 5MB)...'; $('startmsg').className = 'msg';
+  fetch('audio/' + st.pid + '.mp3').then(r => { if (!r.ok) throw 0; return r.blob(); }).then(b => {
+    audio.src = URL.createObjectURL(b); audio.load();
+    $('b-start').disabled = false; $('b-resume').disabled = false; $('startmsg').className = 'msg hidden';
+  }).catch(fail);
   audio.addEventListener('pause', () => {
-    if (audio.ended || !st.startedAt) return;
+    if (!playing) return;               // 단어가 끝나 우리가 멈춘 것이 아니면(전화, 앱 전환 등)
+    playing = false; clearInterval(stopper);
     st.interruptions++; save();
-    $('runmsg').textContent = '음성이 멈췄어요. 바로 이어서 들어 주세요. 멈춘 것은 기록에 남아요.';
-    $('runmsg').classList.remove('hidden'); $('b-resume').classList.remove('hidden');
-  });
-  audio.addEventListener('ended', () => {
-    clearInterval(ticking);
-    if (cur >= 0) st.answers[cur] = input.value;
-    st.finished = true; st.stage = 'end';
-    if (st.interruptions > 0) { st.replay = '예'; document.querySelector('input[name=replay][value="예"]').checked = true; $('b-submit').disabled = false; }
-    save(); show('s-end');
+    $('runmsg').textContent = '소리가 중간에 멈췄어요. 이 문항은 다시 듣지 않고, 들린 만큼 적어 주세요. 멈춘 것은 기록에 남아요.';
+    $('runmsg').classList.remove('hidden');
+    readyToAnswer();
   });
 }
-function indexAt(t){
-  let k = -1;
-  for (let i = 0; i < T.items.length; i++) if (t >= T.items[i] - 0.05 + (i === 0 ? 0 : GRACE)) k = i;
-  return k;
+function label(k){
+  $('qlabel').textContent = k < 2 ? LABELS[k] : LABELS[k] + ' / 36';
+  $('bar').style.width = Math.round(k / LABELS.length * 100) + '%';
 }
-function setItem(k){
-  if (k === cur) return;
-  if (cur >= 0) st.answers[cur] = input.value;
-  if (composing) { input.blur(); input.focus(); composing = false; }
-  cur = k;
-  input.value = '';
-  input.disabled = k < 0;
-  if (k >= 0) {
-    $('qlabel').textContent = k < 2 ? LABELS[k] : LABELS[k] + ' / 36';
-    $('qhint').textContent = k < 2 ? '연습이에요. 들린 단어를 적어 보세요' : (k === 2 ? '이제 본 문항이에요' : '들린 단어를 적어 주세요');
-    $('bar').style.width = Math.round((k + 1) / LABELS.length * 100) + '%';
-    input.focus();
-  }
-  save();
-}
-input.addEventListener('compositionstart', () => composing = true);
-input.addEventListener('compositionend', () => composing = false);
-input.addEventListener('input', () => { if (cur >= 0) { st.answers[cur] = input.value; st.events[cur].push(+audio.currentTime.toFixed(2)); save(); } });
-input.addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
-
-$('b-start').onclick = async () => {
-  if (st.startedAt) return;
+async function playItem(k){
+  st.cur = k; label(k); save();
+  input.value = st.answers[k] || ''; input.disabled = true; $('b-ans').disabled = true;
+  $('qhint').textContent = '듣는 중이에요';
+  if (st.played[k]) { readyToAnswer(); return; }   // 이미 들은 문항(새로고침 뒤)은 다시 틀지 않는다
+  st.played[k] = true; save();
+  audio.currentTime = Math.max(0, T.items[k] - 0.05);
+  playing = true;
   try { await audio.play(); }
-  catch(e) { $('startmsg').textContent = '재생하지 못했어요. 소리 설정을 확인하고 다시 눌러 주세요.'; $('startmsg').classList.remove('hidden'); return; }
+  catch(e) {
+    playing = false; st.played[k] = false; save();
+    $('runmsg').textContent = '소리를 틀지 못했어요. 아래 버튼을 눌러 주세요.'; $('runmsg').classList.remove('hidden'); $('b-resume').classList.remove('hidden');
+    return;
+  }
+  clearInterval(stopper);
+  stopper = setInterval(() => {
+    if (playing && audio.currentTime >= T.ends[k]) { clearInterval(stopper); playing = false; audio.pause(); readyToAnswer(); }
+  }, 20);
+}
+function readyToAnswer(){
+  wordEndAt = performance.now();
+  input.disabled = false; $('b-ans').disabled = false;
+  $('qhint').textContent = st.cur < 2 ? '연습이에요. 들린 대로 적고 제출하세요' : (st.cur === 2 ? '이제 본 문항이에요. 들린 대로 적고 제출하세요' : '들린 대로 적고 제출하세요');
+  input.focus();
+}
+input.addEventListener('input', () => { if (!input.disabled) { st.answers[st.cur] = input.value; st.events[st.cur].push(+((performance.now() - wordEndAt) / 1000).toFixed(2)); save(); } });
+function submitAnswer(){
+  if ($('b-ans').disabled) return;
+  const k = st.cur;
+  $('b-ans').disabled = true;
+  st.answers[k] = input.value;
+  st.rt[k] = +((performance.now() - wordEndAt) / 1000).toFixed(2);
+  $('runmsg').classList.add('hidden');
+  if (k + 1 < LABELS.length) { playItem(k + 1); return; }
+  st.finished = true; st.stage = 'end'; $('bar').style.width = '100%';
+  if (st.interruptions > 0) { st.replay = '예'; document.querySelector('input[name=replay][value="예"]').checked = true; $('b-submit').disabled = false; }
+  save(); show('s-end');
+}
+$('b-ans').onclick = submitAnswer;
+// 한글 키보드는 Enter를 누를 때 마지막 글자를 아직 조합 중일 수 있어서, 조합이 끝난 뒤에 제출한다
+input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); setTimeout(submitAnswer, 60); } });
+
+$('b-start').onclick = () => {
+  if (st.startedAt) return;
   st.startedAt = new Date().toISOString(); st.stage = 'run'; save();
-  show('s-run'); input.disabled = true;
-  ticking = setInterval(() => { if (!audio.paused) setItem(indexAt(audio.currentTime)); }, 50);
+  show('s-run');
+  playItem(0);
 };
-$('b-resume').onclick = async () => { try { await audio.play(); $('runmsg').classList.add('hidden'); $('b-resume').classList.add('hidden'); input.focus(); } catch(e){} };
+$('b-resume').onclick = () => { $('runmsg').classList.add('hidden'); $('b-resume').classList.add('hidden'); playItem(st.cur); };
 document.addEventListener('visibilitychange', () => { if (document.hidden && st.stage === 'run') { st.hidden++; save(); } });
 
 // 끝
@@ -253,7 +275,7 @@ function payload(){
   return { sid: st.sid, file: st.pid, assign: st.assign, earphones: st.earphones,
     replay: st.replay + (st.reloadedMidway ? ' (중간에 페이지를 다시 엶)' : ''),
     answers: st.answers, timing: st.events,
-    meta: { 조용한곳: st.quiet, 처음들음: st.first, 중단횟수: st.interruptions, 화면벗어남: st.hidden, 끝까지: st.finished,
+    meta: { 응답시간: st.rt, 진행: '제출하면 다음 문항', 조용한곳: st.quiet, 처음들음: st.first, 중단횟수: st.interruptions, 화면벗어남: st.hidden, 끝까지: st.finished,
             시작: st.startedAt, 제출: new Date().toISOString(), 음성: AUDIO_VERSION, 기기: navigator.userAgent.slice(0, 160) } };
 }
 function csv(p){
@@ -313,10 +335,15 @@ $('b-submit').onclick = async () => {
 // 다시 열었을 때
 if (st.pid) setupAudio();
 if (st.submitted) finishScreen();
-else if (st.stage === 'run' || st.stage === 'end') {
-  if (st.stage === 'run') { st.reloadedMidway = true; st.stage = 'end'; save(); }
+else if (st.stage === 'run') {
+  st.reloadedMidway = true; save();
+  show('s-run'); label(st.cur);
+  input.disabled = true; $('b-ans').disabled = true; $('qhint').textContent = '';
+  $('runmsg').textContent = '페이지가 다시 열렸어요. 이미 들은 단어는 다시 나오지 않아요. 아래 버튼을 눌러 이어서 해 주세요.';
+  $('runmsg').classList.remove('hidden'); $('b-resume').classList.remove('hidden');
+}
+else if (st.stage === 'end') {
   show('s-end');
-  $('endnote').textContent = st.finished ? '음성이 끝났어요. 하나만 더 알려 주세요.' : '페이지가 중간에 다시 열렸어요. 음성은 다시 들을 수 없어요. 지금까지 적은 답을 제출해 주세요.';
   if (st.replay) { const r = document.querySelector('input[name=replay][value="' + st.replay + '"]'); if (r) { r.checked = true; $('b-submit').disabled = false; } }
 }
 else if (st.stage === 'check') show('s-check');
